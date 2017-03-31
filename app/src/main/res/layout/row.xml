@@ -1,0 +1,56 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:padding="6dip">
+
+
+
+    <TextView
+        android:id="@+id/mytitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignWithParentIfMissing="true"
+
+        android:gravity="center_vertical"
+        android:text="My Application"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+    <TextView
+        android:id="@+id/text2"
+
+        android:layout_width="fill_parent"
+        android:layout_height="26dip"
+
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/mytitle"
+
+        android:maxLines="1"
+        android:ellipsize="marquee"
+        android:text="Simple application that shows how to use RelativeLayout"
+        android:textColor="@color/colorAccent"
+        />
+
+    <TextView
+        android:id="@+id/textElapsed"
+
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+
+        android:layout_gravity="center_horizontal|center"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="6dip"
+        android:adjustViewBounds="true"
+        android:src="@drawable/windows_powershell_icon2"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+
+</RelativeLayout>

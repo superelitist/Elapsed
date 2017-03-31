@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Elapsed</string>
+    <string name="action_settings">Settings</string>
+    <string-array name="titles">
+        <item>Active Directory</item>
+        <item>Contact Book</item>
+        <item>PC Reservation</item>
+    </string-array>
+
+    <string-array name="description">
+        <item>AD Description</item>
+        <item>Contact Book Description</item>
+        <item>PC Reservation Description</item>
+
+    </string-array>
+
+</resources>
