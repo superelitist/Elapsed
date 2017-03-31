@@ -56,6 +56,8 @@ public class MainActivity_old extends AppCompatActivity {
         list.setAdapter(adapter);
     }
 
+
+
     class MyAdapter extends ArrayAdapter<String> {
 
 
@@ -66,7 +68,7 @@ public class MainActivity_old extends AppCompatActivity {
         int imageId;
 
         MyAdapter(Context c, String[] titles, int[] imgs, String[] description) {
-            super(c,R.layout.row, R.id.mytitle, titles);
+            super(c,R.layout.list_item, R.id.mytitle, titles);
             this.context = c;
             this.imgs = imgs;
             this.myDescription = description;
@@ -77,7 +79,7 @@ public class MainActivity_old extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater layoutInflater = (LayoutInflater) getApplication().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             //LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View row = layoutInflater.inflate(R.layout.row,parent,false);
+            View row = layoutInflater.inflate(R.layout.list_item,parent,false);
             TextView myTitle = (TextView) row.findViewById(R.id.mytitle);
             TextView myDescription = (TextView) row.findViewById(R.id.text2);
 

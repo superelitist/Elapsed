@@ -8,34 +8,29 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.util.Log;
 
-import java.text.ParsePosition;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity_old2 extends AppCompatActivity {
 
     private static final String MAIN = "MainActivity";
     private static final String ADAPTER = "Adapter";
-
+    String [] titles;
     int manualElapsedSeconds = 99;
     long timeAtOnCreate = Calendar.getInstance().getTimeInMillis();
     String calculatedElapsedTime = "YouShouldNeverSeeThis";
-    List MyListOfElapsedTimeObjects = new ArrayList<>();
+    MyElapsedTimeObject[] myArrayOfElapsedTimeObjects;
 
 
     @Override
@@ -54,16 +49,17 @@ public class MainActivity extends AppCompatActivity {
         }
         });
 
-        MyListOfElapsedTimeObjects.add(new MyElapsedTimeObject("test", Calendar.getInstance().getTimeInMillis()));
-        MyListOfElapsedTimeObjects.add(new MyElapsedTimeObject("test", Calendar.getInstance().getTimeInMillis()));
+        Resources res = getResources();
+        titles = res.getStringArray(R.array.titles);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                this,
-                R.layout.list_item,
-                R.id.text2,
-                MyListOfElapsedTimeObjects );
+        // initial calculation of elapsed time
+        calculatedElapsedTime = (getRelativeTimeSpanString(timeAtOnCreate, Calendar.getInstance().getTimeInMillis(), 1000 )).toString();
 
-        ((ListView) findViewById(R.id.listOfTimers)).setAdapter(arrayAdapter);
+        // use our custom adapter to parse our array - I guess this also populates the actual layout?
+        MyAdapter myAdapter = new MyAdapter(this, titles, manualElapsedSeconds, calculatedElapsedTime);
+        ((ListView) findViewById(R.id.listOfTimers)).setAdapter(myAdapter);
+
+        //ListView myListView = (ListView) findViewById(R.id.listOfTimers);
 
         final Handler myHandler = new Handler();
 
@@ -92,9 +88,9 @@ public class MainActivity extends AppCompatActivity {
                             calculatedElapsedTime = (getRelativeTimeSpanString(timeAtOnCreate, timeNow, 1000 )).toString();
 
                             //myAdapter.notifyDataSetChanged();
-                            //Log.d(MAIN, "00000000000000000000000000000000000 loops:" + Integer.toString(thisiswhateveriwant));
-                            //Log.d(MAIN, String.valueOf(timeAtOnCreate));
-                            //Log.d(MAIN, String.valueOf(timeNow));
+                            Log.d(MAIN, "00000000000000000000000000000000000 loops:" + Integer.toString(thisiswhateveriwant));
+                            Log.d(MAIN, String.valueOf(timeAtOnCreate));
+                            Log.d(MAIN, String.valueOf(timeNow));
                             Log.d(MAIN, "calculatedElapsedTime: " + calculatedElapsedTime);
                         }
                     });
@@ -107,8 +103,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     class MyElapsedTimeObject {
-        String name;
-        long creationTime;
         public MyElapsedTimeObject(String name, long creationTime) {
         }
 
@@ -116,6 +110,42 @@ public class MainActivity extends AppCompatActivity {
             return getRelativeTimeSpanString(timeAtOnCreate, Calendar.getInstance().getTimeInMillis(), 1000 ).toString();
         }
     }
+
+
+    class MyAdapter extends ArrayAdapter<String> {
+
+
+        Context context;
+        String adapterCalculatedElapsedTime;
+        String myTitles[];
+        int myLoops;
+
+        MyAdapter(Context c, String[] titles, int loops, String adapterCalculatedElapsedTime) {
+            super(c,R.layout.list_item, R.id.mytitle, titles);
+            this.context = c;
+            this.myTitles = titles;
+            this.myLoops = loops;
+            this.adapterCalculatedElapsedTime = adapterCalculatedElapsedTime;
+
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater layoutInflater = (LayoutInflater) getApplication().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View row = layoutInflater.inflate(R.layout.list_item,parent,false);
+            TextView myTitle = (TextView) row.findViewById(R.id.mytitle);
+            TextView myDescription = (TextView) row.findViewById(R.id.text2);
+            //TextView textElapsed = (TextView) row.findViewById(R.id.textElapsed);
+            myTitle.setText(titles[position]);
+            myDescription.setText(Integer.toString(myLoops));
+            Log.d(ADAPTER, "calculatedElapsedTime: " + adapterCalculatedElapsedTime);
+            //textElapsed.setText(adapterCalculatedElapsedTime);
+            return row;
+        }
+    }
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
