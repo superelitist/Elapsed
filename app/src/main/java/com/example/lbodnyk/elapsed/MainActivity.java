@@ -68,6 +68,39 @@ public class MainActivity extends AppCompatActivity {
         ((ListView) findViewById(R.id.listOfTimers)).setAdapter(new MyAdapter(this, titles, description, timeAtOnCreate));
 
 
+        Log.d(TAG, "00000000000000000000000000000000000");
+
+        final ListView myListView = (ListView) findViewById(R.id.listOfTimers);
+
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                int loops = 0;
+                boolean exitThread = false;
+                while (!exitThread) {
+                    try {
+                        Thread.sleep(1000); // Waits for 1 second (1000 milliseconds)
+                    } catch (InterruptedException e) {
+                        System.out.println("I was interrupted!");
+                        e.printStackTrace();
+                    }
+                    loops += 1;
+                    Log.d(TAG, "00000000000000000000000000000000000 loops:" + String.valueOf(loops));
+                    if (loops == 30) {
+                        exitThread = true;
+                    }
+                }
+                myListView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        myListView.setAdapter(new MyAdapter(getApplicationContext(), titles, description, timeAtOnCreate));
+                    }
+                });
+            }
+        };
+
+        Thread myThread = new Thread(myRunnable);
+        myThread.start();
     }
 
 
