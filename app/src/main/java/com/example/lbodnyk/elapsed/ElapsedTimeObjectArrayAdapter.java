@@ -9,12 +9,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-/**
- * Created by lbodnyk on 3/31/2017.
- */
-
-public class ElapsedTimeObjectArrayAdapter extends ArrayAdapter<MyElapsedTimeObject> {
-    public ElapsedTimeObjectArrayAdapter(Context context, ArrayList<MyElapsedTimeObject> elapsedTimeObjects) {
+class ElapsedTimeObjectArrayAdapter extends ArrayAdapter<MyElapsedTimeObject> {
+    ElapsedTimeObjectArrayAdapter(Context context, ArrayList<MyElapsedTimeObject> elapsedTimeObjects) {
         super(context, 0, elapsedTimeObjects);
     }
 
@@ -30,7 +26,7 @@ public class ElapsedTimeObjectArrayAdapter extends ArrayAdapter<MyElapsedTimeObj
         TextView elapsedtimelistitemtitle = (TextView) convertView.findViewById(R.id.elapsedtimelistitemtitle);
         TextView elapsedtimelistitemelapsedtime = (TextView) convertView.findViewById(R.id.elapsedtimelistitemelapsedtime);
         // Populate the data into the template view using the data object
-        elapsedtimelistitemtitle.setText(anElapsedTimeObject.name);
+        elapsedtimelistitemtitle.setText(anElapsedTimeObject.getTitle());
         elapsedtimelistitemelapsedtime.setText(anElapsedTimeObject.getElapsedTime());
         // Return the completed view to render on screen
         return convertView;

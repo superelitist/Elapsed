@@ -14,15 +14,16 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import static android.text.format.DateUtils.getRelativeTimeSpanString;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String MAIN = "MainActivity";
     private static final String ADAPTER = "Adapter";
 
     int manualElapsedSeconds = 99;
-    //long timeAtOnCreate = Calendar.getInstance().getTimeInMillis();
+    long timeAtOnCreate = Calendar.getInstance().getTimeInMillis();
     String calculatedElapsedTime = "YouShouldNeverSeeThis";
-    //List MyListOfElapsedTimeObjects = new ArrayList<>();
     ArrayList<MyElapsedTimeObject> myArrayOfElapsedTimeObjects = new ArrayList<MyElapsedTimeObject>();
 
     @Override
@@ -46,12 +47,12 @@ public class MainActivity extends AppCompatActivity {
         // for testing, prepopulate with some timers.
         myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject("test", Calendar.getInstance().getTimeInMillis()));
         try {
-            Thread.sleep(1000); // Waits for 1 second (1000 milliseconds)
+            Thread.sleep(100); // Waits for 1 second (1000 milliseconds)
         } catch (InterruptedException e) {
             System.out.println("I was interrupted!");
             e.printStackTrace();
         }
-        myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject("test", Calendar.getInstance().getTimeInMillis()));
+        //myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject("test", Calendar.getInstance().getTimeInMillis()));
 
         // Create the adapter to convert the array to views
         final ElapsedTimeObjectArrayAdapter arrayAdapter = new ElapsedTimeObjectArrayAdapter(this, myArrayOfElapsedTimeObjects);
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                         public void run() {
                             manualElapsedSeconds += 1;
                             arrayAdapter.notifyDataSetChanged();
-                            //Log.d(MAIN, "calculatedElapsedTime: " + (getRelativeTimeSpanString(timeAtOnCreate, Calendar.getInstance().getTimeInMillis(), 1000 )).toString());
+                            Log.d(MAIN, "calculatedElapsedTime: " + (getRelativeTimeSpanString(timeAtOnCreate, Calendar.getInstance().getTimeInMillis(), 1000 )).toString());
                         }
                     });
                 }

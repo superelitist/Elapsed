@@ -1,19 +1,23 @@
 package com.example.lbodnyk.elapsed;
 
 import java.util.Calendar;
+
+import static android.text.format.DateUtils.MINUTE_IN_MILLIS;
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
 
-/**
- * Created by lbodnyk on 3/31/2017.
- */
-
-public class MyElapsedTimeObject {
-    String name;
-    long creationTime;
-    public MyElapsedTimeObject(String name, long creationTime) {
+class MyElapsedTimeObject {
+    private String name;
+    private long creationTime;
+    MyElapsedTimeObject(String name, long creationTime) {
+        this.name = name;
+        this.creationTime = creationTime;
     }
 
-    public String getElapsedTime() {
-        return getRelativeTimeSpanString(creationTime, Calendar.getInstance().getTimeInMillis(), 1000 ).toString();
+    String getTitle() {
+        return name;
+    }
+
+    String getElapsedTime() {
+        return getRelativeTimeSpanString(creationTime, Calendar.getInstance().getTimeInMillis(), 1000).toString();
     }
 }
