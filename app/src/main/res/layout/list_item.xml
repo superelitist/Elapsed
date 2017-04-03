@@ -4,8 +4,7 @@
     android:padding="6dip">
 
 
-
-    <TextView
+    <EditText
         android:id="@+id/elapsedtimelistitemtitle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -13,9 +12,10 @@
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
         android:gravity="center_vertical"
+        android:inputType="text"
+        android:maxLines="1"
         android:text="A Default Title"
-        android:textColor="@color/colorPrimaryDark"
-        />
+        android:textColor="@color/colorPrimaryDark" />
 
     <TextView
         android:id="@+id/text2"
@@ -23,7 +23,7 @@
         android:layout_height="26dip"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/mytitle"
+        android:layout_below="@+id/elapsedtimelistitemtitle"
         android:maxLines="1"
         android:ellipsize="marquee"
         android:text="This field is currently unused."
