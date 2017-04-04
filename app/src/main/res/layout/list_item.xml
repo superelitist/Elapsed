@@ -1,48 +1,38 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:layout_height="50dp"
     android:padding="6dip">
 
 
     <EditText
         android:id="@+id/elapsedtimelistitemtitle"
+        style="@style/Widget.AppCompat.EditText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
         android:gravity="center_vertical"
         android:inputType="text"
         android:maxLines="1"
-        android:text="A Default Title"
-        android:textColor="@color/colorPrimaryDark" />
-
-    <TextView
-        android:id="@+id/text2"
-        android:layout_width="fill_parent"
-        android:layout_height="26dip"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/elapsedtimelistitemtitle"
-        android:maxLines="1"
-        android:ellipsize="marquee"
-        android:text="This field is currently unused."
-        android:textColor="@color/colorAccent"
-        />
+        android:selectAllOnFocus="true"
+        android:text="@string/elapsedtimelistitemtitle_text"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
         android:id="@+id/elapsedtimelistitemelapsedtime"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_gravity="center_horizontal|center"
-        android:gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:layout_gravity="center_horizontal|center"
         android:layout_marginRight="6dip"
         android:adjustViewBounds="true"
-        android:textColor="@color/colorPrimaryDark"
-        />
+        android:gravity="center"
+        android:text="@string/elapsedtimelistitemtime_text"
+        android:textAppearance="@style/TextAppearance.AppCompat" />
 
 
 </RelativeLayout>

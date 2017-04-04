@@ -9,24 +9,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.util.Log;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-
-import static android.text.format.DateUtils.getRelativeTimeSpanString;
+import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String MAIN = "MainActivity";
-    private static final String ADAPTER = "Adapter";
-
-    int manualElapsedSeconds = 99;
-    long timeAtOnCreate = Calendar.getInstance().getTimeInMillis();
-    String calculatedElapsedTime = "YouShouldNeverSeeThis";
-    ArrayList<MyElapsedTimeObject> myArrayOfElapsedTimeObjects = new ArrayList<MyElapsedTimeObject>();
+    // private static final String MAIN = "MainActivity";
+    ArrayList<MyElapsedTimeObject> myArrayOfElapsedTimeObjects = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +34,13 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View view) {
            Snackbar.make(view, "Trying to add a new MyElapsedTimeObject", Snackbar.LENGTH_LONG)
                    .setAction("Action", null).show();
-
-
-           myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject("new", Calendar.getInstance().getTimeInMillis()));
+           myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject(new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTimeInMillis()), Calendar.getInstance().getTimeInMillis()));
 
         }
         });
 
-        // for testing, prepopulate with some timers.
-        myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject("test", Calendar.getInstance().getTimeInMillis()));
+        // for testing, prepopulate with a timer.
+        myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject(new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTimeInMillis()), Calendar.getInstance().getTimeInMillis()));
 
         try {
             Thread.sleep(100); // Waits for 1 second (1000 milliseconds)
@@ -87,11 +78,20 @@ public class MainActivity extends AppCompatActivity {
                     myHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if (!findViewById(R.id.elapsedtimelistitemtitle).hasFocus()) {
-                                arrayAdapter.notifyDataSetChanged();
-                                Log.d(MAIN, "NOT Editing text!");
+                            // This is where the main thread actually runs things. Fuck Java.
+                            boolean anyRowHasFocus = false;
+                            for ( int i = 0; i < ((ListView) findViewById(R.id.listOfTimers)).getChildCount(); i++ ) {
+                                // I must check each row individually, because the containing list almost never loses focus.
+                                if ( ((ListView) findViewById(R.id.listOfTimers)).getChildAt(i).hasFocus() ) {
+                                    //Log.d(MAIN, "row " + i + " has focus!");
+                                    anyRowHasFocus = true;
+                                }
                             }
-                            Log.d(MAIN, "calculatedElapsedTime: " + (getRelativeTimeSpanString(timeAtOnCreate, Calendar.getInstance().getTimeInMillis(), 1000 )).toString());
+                            if (!anyRowHasFocus) {
+                                //Log.d(MAIN, "Seems like I can update the list now.");
+                                arrayAdapter.notifyDataSetChanged();
+                            }
+                            //Log.d(MAIN, "Time since OnCreate: " + (getRelativeTimeSpanString(timeAtOnCreate, Calendar.getInstance().getTimeInMillis(), 1000 )).toString());
                         }
                     });
                     synchronized (selfPauseLock) {
@@ -99,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
                             try {
                                 selfPauseLock.wait();
                             } catch (InterruptedException e) {
+                                System.out.println("I am required to inform you that I was interrupted!");
+                                e.printStackTrace();
                             }
                         }
                     }
@@ -119,25 +121,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-/*        View.OnFocusChangeListener focusListener = new View.OnFocusChangeListener() {
-            View focusedView;
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus){
-                    focusedView = v;
-                } else {
-                    focusedView  = null;
-                }
-            }
-        };*/
+        //Runnable myRunnable = new MainActivityRunnable();
+        //Thread myThread = new Thread(new MainActivityRunnable());
+        //myThread.start();
 
-        //findViewById(R.id.elapsedtimelistitemtitle).setOnFocusChangeListener(focusListener);
-
-        Runnable myRunnable = new MainActivityRunnable();
-        Thread myThread = new Thread(myRunnable);
-        myThread.start();
+        // I just like cramming multiple lines together...
+        (new Thread(new MainActivityRunnable())).start();
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
