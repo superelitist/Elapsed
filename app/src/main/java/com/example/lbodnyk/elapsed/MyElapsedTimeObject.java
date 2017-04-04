@@ -5,23 +5,32 @@ import static android.text.format.DateUtils.getRelativeTimeSpanString;
 
 class MyElapsedTimeObject {
 
-    private String name;
+    private String title;
     private long creationTime;
+    private boolean isNew = true;
 
     MyElapsedTimeObject(String name, long creationTime) {
-        this.name = name;
+        this.title = name;
         this.creationTime = creationTime;
     }
 
     void setTitle(String newName) {
-        this.name = newName;
+        this.title = newName;
     }
 
     String getTitle() {
-        return name;
+        return title;
     }
 
     String getElapsedTime() {
         return getRelativeTimeSpanString(creationTime, Calendar.getInstance().getTimeInMillis(), 1000).toString();
+    }
+
+    boolean getIsNew() {
+        return isNew;
+    }
+
+    void setIsNew(boolean x) {
+        this.isNew = x;
     }
 }
