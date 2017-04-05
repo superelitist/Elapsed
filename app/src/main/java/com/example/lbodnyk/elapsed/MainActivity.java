@@ -39,16 +39,16 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View view) {
            Snackbar.make(view, "Trying to add a new MyElapsedTimeObject", Snackbar.LENGTH_LONG)
                    .setAction("Action", null).show();
-           myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject(new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTimeInMillis()), Calendar.getInstance().getTimeInMillis()));
+           myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject(new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTimeInMillis()), Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis()));
 
         }
         });
 
         // for testing, prepopulate with a timer.
-        myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject(new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTimeInMillis()), Calendar.getInstance().getTimeInMillis()));
+        myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject(new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTimeInMillis()), Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis()));
 
         try {
-            Thread.sleep(100); // Waits for a bit (100 milliseconds)
+            Thread.sleep(10); // Waits for a bit (100 milliseconds)
         } catch (InterruptedException e) {
             System.out.println("I was interrupted!");
             e.printStackTrace();

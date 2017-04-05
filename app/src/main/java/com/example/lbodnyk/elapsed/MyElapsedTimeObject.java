@@ -6,12 +6,14 @@ import static android.text.format.DateUtils.getRelativeTimeSpanString;
 class MyElapsedTimeObject {
 
     private String title;
-    private long creationTime;
+    private long creationTimestamp;
+    private long latestTimestamp;
     private boolean isNew = true;
 
-    MyElapsedTimeObject(String name, long creationTime) {
+    MyElapsedTimeObject(String name, long creationTime, long latestTimestamp) {
         this.title = name;
-        this.creationTime = creationTime;
+        this.creationTimestamp = creationTime;
+        this.latestTimestamp = latestTimestamp;
     }
 
     void setTitle(String newName) {
@@ -23,7 +25,7 @@ class MyElapsedTimeObject {
     }
 
     String getElapsedTime() {
-        return getRelativeTimeSpanString(creationTime, Calendar.getInstance().getTimeInMillis(), 1000).toString();
+        return getRelativeTimeSpanString(latestTimestamp, Calendar.getInstance().getTimeInMillis(), 1000).toString();
     }
 
     boolean getIsNew() {
@@ -32,5 +34,9 @@ class MyElapsedTimeObject {
 
     void setIsNew(boolean x) {
         this.isNew = x;
+    }
+
+    public void updateTime() {
+        this.latestTimestamp = Calendar.getInstance().getTimeInMillis();
     }
 }
