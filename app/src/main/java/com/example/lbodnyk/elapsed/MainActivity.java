@@ -20,15 +20,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-
 public class MainActivity extends AppCompatActivity {
 
     // private static final String MAIN = "MainActivity";
-    ArrayList<MyElapsedTimeObject> myArrayOfElapsedTimeObjects = new ArrayList<>();
+    static ArrayList<MyElapsedTimeObject> myArrayOfElapsedTimeObjects = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // recovering the instance state
+        if (savedInstanceState != null) {
+            //mGameState = savedInstanceState.getString(GAME_STATE_KEY);
+        }
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -75,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 while (!selfFinished) {
                     try {
-                        Thread.sleep(1000); // Waits for 1 second (1000 milliseconds)
+                        Thread.sleep(333); // Waits for 1 second (1000 milliseconds)
                     } catch (InterruptedException e) {
                         System.out.println("I am required to inform you that I was interrupted!");
                         e.printStackTrace();
@@ -126,6 +130,16 @@ public class MainActivity extends AppCompatActivity {
 
         // I just like cramming multiple lines together...
         (new Thread(new MainActivityRunnable())).start();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //outState.putString(GAME_STATE_KEY, mGameState);
+        //outState.putString(TEXT_VIEW_KEY, mTextView.getText());
+        //outState.putParcelableArrayList();
+
+        // call superclass to save any view hierarchy
+        super.onSaveInstanceState(outState);
     }
 
     @Override

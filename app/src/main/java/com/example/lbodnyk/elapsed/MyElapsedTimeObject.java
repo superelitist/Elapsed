@@ -1,9 +1,12 @@
 package com.example.lbodnyk.elapsed;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Calendar;
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
 
-class MyElapsedTimeObject {
+class MyElapsedTimeObject implements Parcelable{
 
     private String title;
     private long creationTimestamp;
@@ -39,4 +42,22 @@ class MyElapsedTimeObject {
     public void updateTime() {
         this.latestTimestamp = Calendar.getInstance().getTimeInMillis();
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+    }
+    public static final Parcelable.Creator<MyElapsedTimeObject> CREATOR = new Parcelable.Creator<MyElapsedTimeObject>() {
+        public MyElapsedTimeObject createFromParcel(Parcel in) {
+            return new MyElapsedTimeObject(in);
+        }
+
+        public MyElapsedTimeObject[] newArray(int size) {
+            return new MyElapsedTimeObject[size];
+        }
 }

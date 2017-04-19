@@ -1,3 +1,5 @@
+// watches for changes in text fields, and updates the MyElapsedTimeObject accordingly
+
 package com.example.lbodnyk.elapsed;
 
 import android.text.Editable;
