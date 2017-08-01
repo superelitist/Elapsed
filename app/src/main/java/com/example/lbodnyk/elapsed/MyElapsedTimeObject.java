@@ -6,9 +6,9 @@ import android.os.Parcelable;
 import java.util.Calendar;
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
 
-class MyElapsedTimeObject implements Parcelable{
+class MyElapsedTimeObject implements Parcelable {
 
-    private String title;
+    static private String title;
     private long creationTimestamp;
     private long latestTimestamp;
     private boolean isNew = true;
@@ -17,6 +17,12 @@ class MyElapsedTimeObject implements Parcelable{
         this.title = name;
         this.creationTimestamp = creationTime;
         this.latestTimestamp = latestTimestamp;
+    }
+
+    MyElapsedTimeObject(Parcel src) {
+        title = src.readString();
+        creationTimestamp = src.readLong();
+        latestTimestamp = src.readLong();
     }
 
     void setTitle(String newName) {
@@ -50,14 +56,19 @@ class MyElapsedTimeObject implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeString(title);
+        dest.writeLong(creationTimestamp);
+        dest.writeLong(latestTimestamp);
     }
-    public static final Parcelable.Creator<MyElapsedTimeObject> CREATOR = new Parcelable.Creator<MyElapsedTimeObject>() {
-        public MyElapsedTimeObject createFromParcel(Parcel in) {
-            return new MyElapsedTimeObject(in);
+
+    public static final Parcelable.Creator<MyElapsedTimeObject> CREATOR
+            = new Parcelable.Creator<MyElapsedTimeObject>() {
+        public MyElapsedTimeObject createFromParcel(Parcel src) {
+            return new MyElapsedTimeObject(src);
         }
 
         public MyElapsedTimeObject[] newArray(int size) {
             return new MyElapsedTimeObject[size];
         }
+    };
 }

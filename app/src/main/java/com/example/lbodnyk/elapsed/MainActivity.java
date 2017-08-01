@@ -1,6 +1,7 @@
 package com.example.lbodnyk.elapsed;
 
 import android.content.Context;
+import android.util.Log;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,11 +28,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("lifecycle","onCreate() invoked");
         super.onCreate(savedInstanceState);
 
         // recovering the instance state
         if (savedInstanceState != null) {
-            //mGameState = savedInstanceState.getString(GAME_STATE_KEY);
+            Log.d("lifecycle","savedInstanceState is NOT null, restoring from Parcel...");
+            myArrayOfElapsedTimeObjects = savedInstanceState.getParcelableArrayList("the_array_list");
+        } else {
+            Log.d("lifecycle","savedInstanceState IS null, creating a sample item.");
+            myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject(new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTimeInMillis()), Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis()));
         }
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -49,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // for testing, prepopulate with a timer.
-        myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject(new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTimeInMillis()), Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis()));
+        //myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject(new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTimeInMillis()), Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis()));
 
         try {
             Thread.sleep(10); // Waits for a bit (100 milliseconds)
@@ -64,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
         final Handler myHandler = new Handler();
 
-        // {
         class MainActivityRunnable implements Runnable {
             final private Object selfPauseLock;
             private boolean selfPaused;
@@ -133,13 +138,50 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    protected void onStart() {
+        super.onStart();
+        Log.d("lifecycle","onStart() invoked");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("lifecycle","onResume() invoked");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("lifecycle","onPause() invoked");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("lifecycle","onStop() invoked");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("lifecycle","onRestart() invoked");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("lifecycle","onDestroy() invoked");
+    }
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        Log.d("lifecycle","onSaveInstanceState() invoked");
         //outState.putString(GAME_STATE_KEY, mGameState);
         //outState.putString(TEXT_VIEW_KEY, mTextView.getText());
         //outState.putParcelableArrayList();
 
         // call superclass to save any view hierarchy
-        super.onSaveInstanceState(outState);
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putParcelableArrayList("the_array_list", myArrayOfElapsedTimeObjects);
     }
 
     @Override
