@@ -36,14 +36,22 @@ class ElapsedTimeObjectArrayAdapter extends ArrayAdapter<MyElapsedTimeObject> {
         TextView elapsedtimelistitemtitle = (TextView) convertView.findViewById(R.id.elapsedtimelistitemtitle);
         TextView elapsedtimelistitemelapsedtime = (TextView) convertView.findViewById(R.id.elapsedtimelistitemelapsedtime);
         // Populate the data into the template view using the data object
+        // if this is the first time we're interacting with this object, populate the associated EditText with the object title, instead of vice-versa
         if (anElapsedTimeObject.getIsNew()) {
-            elapsedtimelistitemtitle.setText(anElapsedTimeObject.getTitle()); // if this is the first time we're interacting with this object, populate the associated EditText with the object title, instead of vice-versa
+            Log.d("ArrayAdaptor", "anElapsedTimeObject.getIsNew() = TRUE");
+            elapsedtimelistitemtitle.setText(anElapsedTimeObject.getTitle());
             anElapsedTimeObject.setIsNew(false);
         } else{
             anElapsedTimeObject.setTitle(elapsedtimelistitemtitle.getText().toString()); // otherwise, the other way around, obviously!
         }
+
+
+
+        //elapsedtimelistitemtitle.setText(anElapsedTimeObject.getTitle());
         elapsedtimelistitemelapsedtime.setText(anElapsedTimeObject.getElapsedTime());
 
+
+        elapsedtimelistitemtitle.addTextChangedListener(new MyTextWatcher(elapsedtimelistitemtitle, anElapsedTimeObject));
 
         convertView.setOnTouchListener(new OnSwipeTouchListener(convertView.getContext() ) {
 

@@ -23,6 +23,7 @@ class MyElapsedTimeObject implements Parcelable {
         title = src.readString();
         creationTimestamp = src.readLong();
         latestTimestamp = src.readLong();
+        isNew = (Boolean) src.readValue( null );
     }
 
     void setTitle(String newName) {
@@ -59,6 +60,7 @@ class MyElapsedTimeObject implements Parcelable {
         dest.writeString(title);
         dest.writeLong(creationTimestamp);
         dest.writeLong(latestTimestamp);
+        dest.writeValue(isNew);
     }
 
     public static final Parcelable.Creator<MyElapsedTimeObject> CREATOR

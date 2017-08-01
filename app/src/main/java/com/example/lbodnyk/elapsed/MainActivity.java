@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         (new Thread(new MainActivityRunnable())).start();
     }
 
-    @Override
+/*    @Override
     protected void onStart() {
         super.onStart();
         Log.d("lifecycle","onStart() invoked");
@@ -171,14 +171,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.d("lifecycle","onDestroy() invoked");
-    }
+    }*/
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         Log.d("lifecycle","onSaveInstanceState() invoked");
-        //outState.putString(GAME_STATE_KEY, mGameState);
-        //outState.putString(TEXT_VIEW_KEY, mTextView.getText());
-        //outState.putParcelableArrayList();
-
         // call superclass to save any view hierarchy
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putParcelableArrayList("the_array_list", myArrayOfElapsedTimeObjects);
