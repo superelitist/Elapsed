@@ -1,6 +1,7 @@
 package com.example.lbodnyk.elapsed;
 
 import android.content.Context;
+import android.os.Looper;
 import android.util.Log;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -23,52 +24,39 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    // private static final String MAIN = "MainActivity";
-    static ArrayList<MyElapsedTimeObject> myArrayOfElapsedTimeObjects = new ArrayList<>();
+    private static final String MAIN = "MyDebug_MainActivity";
+    private static final String LIFECYCLE = "MyDebug_LifeCycle";
+    private static ArrayList<MyElapsedTimeObject> myArrayOfElapsedTimeObjects = new ArrayList<>();
+    private final Handler mainThreadHandler = new Handler(Looper.getMainLooper());
+    //private final Handler mainThreadHandler = new Handler();
+    Thread MyThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("lifecycle","onCreate() invoked");
+        Log.d(LIFECYCLE,"onCreate() invoked");
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        final ElapsedTimeObjectArrayAdapter arrayAdapter;
 
         // recovering the instance state
         if (savedInstanceState != null) {
-            Log.d("lifecycle","savedInstanceState is NOT null, restoring from Parcel...");
+            Log.d(LIFECYCLE,"savedInstanceState is NOT null, restoring from Parcel...");
             myArrayOfElapsedTimeObjects = savedInstanceState.getParcelableArrayList("the_array_list");
         } else {
-            Log.d("lifecycle","savedInstanceState IS null, creating a sample item.");
+            // for testing, prepopulate with a timer.
+            Log.d(LIFECYCLE,"savedInstanceState IS null, creating a sample item.");
             myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject(new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTimeInMillis()), Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis()));
-        }
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-           Snackbar.make(view, "Trying to add a new MyElapsedTimeObject", Snackbar.LENGTH_LONG)
-                   .setAction("Action", null).show();
-           myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject(new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTimeInMillis()), Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis()));
 
         }
-        });
 
-        // for testing, prepopulate with a timer.
-        //myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject(new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTimeInMillis()), Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis()));
+        initView();
 
-        try {
-            Thread.sleep(10); // Waits for a bit (100 milliseconds)
-        } catch (InterruptedException e) {
-            System.out.println("I was interrupted!");
-            e.printStackTrace();
-        }
 
         // Create the adapter to convert the array to views
-        final ElapsedTimeObjectArrayAdapter arrayAdapter = new ElapsedTimeObjectArrayAdapter(this, myArrayOfElapsedTimeObjects);
+        arrayAdapter = new ElapsedTimeObjectArrayAdapter(this, myArrayOfElapsedTimeObjects);
         ((ListView) findViewById(R.id.listOfTimers)).setAdapter(arrayAdapter);
 
-        final Handler myHandler = new Handler();
 
         class MainActivityRunnable implements Runnable {
             final private Object selfPauseLock;
@@ -82,17 +70,22 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public void run() {
+                // Moves the current Thread into the background
+                android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+                Log.d(MAIN, "========================================================");
+                Log.d(MAIN, "run()");
+                Log.d(MAIN, "========================================================");
                 while (!selfFinished) {
                     try {
-                        Thread.sleep(333); // Waits for 1 second (1000 milliseconds)
+                        Thread.sleep(2000); // Waits for x milliseconds
                     } catch (InterruptedException e) {
                         System.out.println("I am required to inform you that I was interrupted!");
                         e.printStackTrace();
                     }
-                    myHandler.post(new Runnable() {
+                    mainThreadHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            // This is where the main thread actually runs things. Fuck Java.
+                            // This is where the main (not UI) thread actually runs things. Fuck Java.
                             boolean anyRowHasFocus = false;
                             for ( int i = 0; i < ((ListView) findViewById(R.id.listOfTimers)).getChildCount(); i++ ) {
                                 // I must check each row individually, because the containing list almost never loses focus.
@@ -101,9 +94,12 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                             if (!anyRowHasFocus) {
+                                int id = android.os.Process.getThreadPriority(android.os.Process.myTid());
+                                Log.d(MAIN, "arrayAdapter.notifyDataSetChanged(), Thread:" + Integer.toString(id));
                                 arrayAdapter.notifyDataSetChanged();
+                                Log.d(MAIN, "[postTaskWithHandlerOnMainThread] Current looper is a main thread (UI) looper: "
+                                        + (Looper.myLooper() == Looper.getMainLooper()));
                             }
-                            //Log.d(MAIN, "Time since OnCreate: " + (getRelativeTimeSpanString(timeAtOnCreate, Calendar.getInstance().getTimeInMillis(), 1000 )).toString());
                         }
                     });
                     synchronized (selfPauseLock) {
@@ -133,51 +129,68 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        // I just like cramming multiple lines together...
-        (new Thread(new MainActivityRunnable())).start();
+        MyThread = (new Thread(new MainActivityRunnable()));
+        MyThread.start();
     }
 
-/*    @Override
+    @Override
     protected void onStart() {
         super.onStart();
-        Log.d("lifecycle","onStart() invoked");
+        Log.d(LIFECYCLE,"onStart() invoked");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("lifecycle","onResume() invoked");
+        Log.d(LIFECYCLE,"onResume() invoked");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("lifecycle","onPause() invoked");
+        Log.d(LIFECYCLE,"onPause() invoked");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d("lifecycle","onStop() invoked");
+        Log.d(LIFECYCLE,"onStop() invoked");
+        mainThreadHandler.removeCallbacks(null);
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d("lifecycle","onRestart() invoked");
+        Log.d(LIFECYCLE,"onRestart() invoked");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("lifecycle","onDestroy() invoked");
-    }*/
+        Log.d(LIFECYCLE,"onDestroy() invoked");
+    }
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        Log.d("lifecycle","onSaveInstanceState() invoked");
+        Log.d(LIFECYCLE,"onSaveInstanceState() invoked");
         // call superclass to save any view hierarchy
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putParcelableArrayList("the_array_list", myArrayOfElapsedTimeObjects);
+    }
+
+    private void initView() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Trying to add a new MyElapsedTimeObject", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject(new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTimeInMillis()), Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis()));
+
+            }
+        });
     }
 
     @Override

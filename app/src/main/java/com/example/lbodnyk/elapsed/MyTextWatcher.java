@@ -23,6 +23,6 @@ public class MyTextWatcher implements TextWatcher {
     public void afterTextChanged(Editable s) {
         //Log.d("MyTextWatcher", "afterTextChanged s.toString(): " + s.toString());
         ElapsedTimeObject.setTitle(s.toString());
-        Log.d("MyTextWatcher", "afterTextChanged ElapsedTimeObject.getTitle(): " + ElapsedTimeObject.getTitle());
+        //Log.d("MyTextWatcher", "afterTextChanged ElapsedTimeObject.getTitle(): " + ElapsedTimeObject.getTitle());
     }
 }

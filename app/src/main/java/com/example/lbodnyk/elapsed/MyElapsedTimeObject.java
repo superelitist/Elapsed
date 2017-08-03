@@ -2,12 +2,14 @@ package com.example.lbodnyk.elapsed;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Calendar;
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
 
 class MyElapsedTimeObject implements Parcelable {
 
+    private static final String TAG = "MyDebug_Object";
     static private String title;
     private long creationTimestamp;
     private long latestTimestamp;
@@ -15,6 +17,7 @@ class MyElapsedTimeObject implements Parcelable {
 
     MyElapsedTimeObject(String name, long creationTime, long latestTimestamp) {
         this.title = name;
+        Log.d(TAG, "MyElapsedTimeObject() name:" + title);
         this.creationTimestamp = creationTime;
         this.latestTimestamp = latestTimestamp;
     }
