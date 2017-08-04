@@ -10,7 +10,7 @@ import static android.text.format.DateUtils.getRelativeTimeSpanString;
 class MyElapsedTimeObject implements Parcelable {
 
     private static final String TAG = "MyDebug_Object";
-    static private String title;
+    private String title;
     private long creationTimestamp;
     private long latestTimestamp;
     private boolean isNew = true;

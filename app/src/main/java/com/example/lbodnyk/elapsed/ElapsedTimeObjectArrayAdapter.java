@@ -27,41 +27,46 @@ class ElapsedTimeObjectArrayAdapter extends ArrayAdapter<MyElapsedTimeObject> {
     @Override
     public View getView(final int position,View convertView, final ViewGroup parent) {
         Log.d(ARRAYADAPTER, "ElapsedTimeObjectArrayAdapter.getView()");
+
         // Get the data item for this position
-        final MyElapsedTimeObject currentElapsedTimeObject = getItem(position);
+        MyElapsedTimeObject currentElapsedTimeObject = getItem(position);
+
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
+            TextView elapsedtimelistitemtitle = (TextView) convertView.findViewById(R.id.elapsedtimelistitemtitle);
+            Log.d(ARRAYADAPTER, "elapsedtimelistitemtitle (position: " + String.valueOf(position) + " -> " + elapsedtimelistitemtitle.getText().toString());
+            elapsedtimelistitemtitle.addTextChangedListener(new MyTextWatcher(elapsedtimelistitemtitle, currentElapsedTimeObject));
+            if (currentElapsedTimeObject.getIsNew()) {
+                Log.d(ARRAYADAPTER, "currentElapsedTimeObject.getIsNew(): " + currentElapsedTimeObject.getIsNew() + ", setting ListView field to: " + currentElapsedTimeObject.getTitle());
+                elapsedtimelistitemtitle.setText(currentElapsedTimeObject.getTitle());
+                currentElapsedTimeObject.setIsNew(false);
+            } else {
+                currentElapsedTimeObject.setTitle(elapsedtimelistitemtitle.getText().toString()); // otherwise, the other way around, obviously!
+            }
         }
+
         // Lookup view for data population
-        TextView elapsedtimelistitemtitle = (TextView) convertView.findViewById(R.id.elapsedtimelistitemtitle);
-        Log.d(ARRAYADAPTER, "elapsedtimelistitemtitle (position: " + String.valueOf(position) + " -> " + elapsedtimelistitemtitle.getText().toString());
+
+
         TextView elapsedtimelistitemelapsedtime = (TextView) convertView.findViewById(R.id.elapsedtimelistitemelapsedtime);
         Log.d(ARRAYADAPTER, "elapsedtimelistitemelapsedtime (position: " + String.valueOf(position) + " -> " + elapsedtimelistitemelapsedtime.getText().toString());
 
         // Populate the data into the template view using the data object
+
         // if this is the first time we're interacting with this object, populate the associated EditText with the object title, instead of vice-versa
-        if (currentElapsedTimeObject.getIsNew()) {
-            //Log.d(ARRAYADAPTER, "currentElapsedTimeObject.getIsNew() = TRUE -> currentElapsedTimeObject.getTitle(): " + currentElapsedTimeObject.getTitle());
-            elapsedtimelistitemtitle.setText(currentElapsedTimeObject.getTitle());
-            //Log.d(ARRAYADAPTER, "currentElapsedTimeObject.getIsNew() = TRUE -> elapsedtimelistitemtitle.getText(): " + elapsedtimelistitemtitle.getText());
-            currentElapsedTimeObject.setIsNew(false);
-        } else {
-            currentElapsedTimeObject.setTitle(elapsedtimelistitemtitle.getText().toString()); // otherwise, the other way around, obviously!
-        }
 
 
-
-        elapsedtimelistitemtitle.setText(currentElapsedTimeObject.getTitle());
+        //elapsedtimelistitemtitle.setText(currentElapsedTimeObject.getTitle());
         elapsedtimelistitemelapsedtime.setText(currentElapsedTimeObject.getElapsedTime());
 
 
-        elapsedtimelistitemtitle.addTextChangedListener(new MyTextWatcher(elapsedtimelistitemtitle, currentElapsedTimeObject));
+
 
         convertView.setOnTouchListener(new OnSwipeTouchListener(convertView.getContext() ) {
 
             public void onClick() {
-                currentElapsedTimeObject.updateTime();
+                //currentElapsedTimeObject.updateTime();
 
                 Log.d(ARRAYADAPTER, "onClick! position" + String.valueOf(position));
             }
@@ -84,7 +89,7 @@ class ElapsedTimeObjectArrayAdapter extends ArrayAdapter<MyElapsedTimeObject> {
             }
             public void onDoubleClick() {
 
-                ElapsedTimeObjectArrayAdapter.super.remove(currentElapsedTimeObject);
+               // ElapsedTimeObjectArrayAdapter.super.remove(currentElapsedTimeObject);
                 ElapsedTimeObjectArrayAdapter.super.notifyDataSetChanged();
                 Log.d(ARRAYADAPTER, "onDoubleClick! position" + String.valueOf(position));
             }
