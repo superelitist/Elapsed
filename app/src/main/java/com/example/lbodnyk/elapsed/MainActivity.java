@@ -41,8 +41,14 @@ public class MainActivity extends AppCompatActivity {
 
         // recovering the instance state
         if (savedInstanceState != null) {
+            Log.d(LIFECYCLE, "===================================================================");
             Log.d(LIFECYCLE, "savedInstanceState is NOT null, restoring from Parcel...");
             myArrayOfElapsedTimeObjects = savedInstanceState.getParcelableArrayList("the_array_list");
+            for (MyElapsedTimeObject eachObject : myArrayOfElapsedTimeObjects) {
+                Log.d(MAIN, eachObject.getTitle().toString() );
+                eachObject.setIsNew(true);
+            }
+            Log.d(LIFECYCLE, "===================================================================");
         } else {
             // for testing, prepopulate with a timer.
             Log.d(LIFECYCLE, "savedInstanceState IS null, creating a sample item.");
@@ -69,9 +75,8 @@ public class MainActivity extends AppCompatActivity {
                     for (MyElapsedTimeObject eachObject : myArrayOfElapsedTimeObjects) {
                         Log.d(MAIN, eachObject.getTitle().toString() );
                     }
-
                     arrayAdapter.notifyDataSetChanged();
-
+                    Log.d(MAIN, "----------------------------------------------------------------");
                 }
                 if (!MainActivityRunnableIsFinished) {
                     mainThreadHandler.postDelayed(this, 2000);
@@ -141,7 +146,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Trying to add a new MyElapsedTimeObject", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject(new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTimeInMillis()), Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis()));
+                arrayAdapter.add(new MyElapsedTimeObject(new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTimeInMillis()), Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis()));
+                //myArrayOfElapsedTimeObjects.add(new MyElapsedTimeObject(new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTimeInMillis()), Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis()));
+                arrayAdapter.notifyDataSetChanged();
             }
         });
     }
